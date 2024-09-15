@@ -1,0 +1,215 @@
+# MTK project .rc configure
+
+on early-init
+    # softdog
+    chown root system /dev/watchdog
+    chmod 0660 /dev/watchdog    
+    symlink /dev/watchdog /dev/softdog
+    write /dev/softdog 1 
+
+on init
+    mkdir /mnt/media_rw/usbotg 0700 media_rw media_rw
+    mkdir /storage/usbotg 0700 root root
+    write /sys/module/musb_hdrc/parameters/mu3d_force_on 1
+
+on post-fs-data
+
+#Camera
+    chmod 0660 /dev/MAINAF
+    chown system camera /dev/MAINAF
+
+    chmod 0660 /dev/MAINAF2
+    chown system camera /dev/MAINAF2
+
+    chmod 0660 /dev/SUBAF
+    chown system camera /dev/SUBAF
+
+    chmod 0660 /dev/GAF001AF
+    chown system camera /dev/GAF001AF
+
+    chmod 0660 /dev/DW9714AF
+    chown system camera /dev/DW9714AF
+
+    chmod 0660 /dev/LC898212AF
+    chown system camera /dev/LC898212AF
+
+    chmod 0660 /dev/BU64745GWZAF
+    chown system camera /dev/BU64745GWZAF
+
+#+bug584789,zhanghengyuan.wt,MODIFY,2020/12/31,chown enable_flashlight for factory test
+    chown system system /sys/devices/platform/flashlights_mt6360/enable_flashlight
+#-bug584789,zhanghengyuan.wt,MODIFY,2020/12/31,chown enable_flashlight for factory test
+#+bug584789,zhanghengyuan.wt,MODIFY,2021/3/8,Add Samsung flashlight file node
+    chown system system /sys/class/camera/flash/rear_flash
+    chmod 0777 /sys/class/camera/flash/rear_flash
+#-bug584789,zhanghengyuan.wt,MODIFY,2021/3/8,Add Samsung flashlight file node
+#+bug 604664 yaoguizhen.wt, ADD, 2021/1/19,  add for dual camera calibration .
+    #restorecon_recursive /mnt/vendor/persist
+    mkdir /mnt/vendor/persist/camera  0777 cameraserver cameraserver
+    chmod 0664 /mnt/vendor/persist/camera/calib_result
+#-bug 604664 yaoguizhen.wt, ADD, 2021/1/19,  add for dual camera calibration .
+
+#+bug 604664 yaoguizhen.wt, ADD, 2021/4/4,  add for dualcamera_file
+    #restorecon_recursive /mnt/vendor/persist
+    mkdir /data/vendor/dualcamera  0777 cameraserver cameraserver
+    copy  /vendor/etc/mecp.bin               /data/vendor/dualcamera
+    copy  /vendor/etc/preview_cache    /data/vendor/dualcamera
+    copy  /vendor/etc/preview_model   /data/vendor/dualcamera
+    copy  /vendor/etc/preview_policy   /data/vendor/dualcamera
+    copy  /vendor/etc/capture_cache   /data/vendor/dualcamera
+    copy  /vendor/etc/capture_model   /data/vendor/dualcamera
+    copy  /vendor/etc/capture_policy   /data/vendor/dualcamera
+#-bug 604664 yaoguizhen.wt, ADD, 2021/4/4,  add for dualcamera_file
+
+#SMB
+    chown system system /proc/smb/ScreenComm
+    chmod 0660 /proc/smb/ScreenComm
+
+    chmod 0660 /dev/spm
+    chown system system /dev/spm
+
+    # Bug+ 781431 daichangjin.wt , 20220726,add Create anc face unlock dir
+    mkdir /data/vendor/anc_face_unlock
+    chown root system /data/vendor/anc_face_unlock
+    chmod 0771 /data/vendor/anc_face_unlock
+
+    mkdir /vendor/app/anc_face_unlock
+    chown root system /vendor/app/anc_face_unlock
+    chmod 0771 /vendor/app/anc_face_unlock
+    # Bug- 781431 daichangjin.wt , 20220726,add Create anc face unlock dir
+#+bug 641202 zhengkanxiang.wt, add, 2021/4/8,  add for MST SS pay function test
+    chown system system /sys/class/mstldo/mst_drv/transmit
+#-bug 641202 zhengkanxiang.wt, add, 2021/4/8,  add for MST SS pay function test
+
+
+#For sar-sensor
+#Allow access to sar sensors device attributes
+    chown system system /sys/class/capsense/ch0_cap_diff_dump
+    chown system system /sys/class/capsense/ch1_cap_diff_dump
+    chown system system /sys/class/capsense/ch2_cap_diff_dump
+    chown system system /sys/class/capsense/power_enable
+    chown system system /sys/class/capsense/user_test
+    chmod 0660 /sys/class/capsense/ch0_cap_diff_dump
+    chmod 0660 /sys/class/capsense/ch1_cap_diff_dump
+    chmod 0660 /sys/class/capsense/ch2_cap_diff_dump
+    chmod 0660 /sys/class/capsense/power_enable
+    chmod 0660 /sys/class/capsense/user_test
+
+    chown system system /sys/class/sensors/grip_sensor_wifi/enable
+    chown system system /sys/class/sensors/grip_sensor_wifi/poll_delay
+    chown system system /sys/class/sensors/grip_sensor_wifi/enable_wakeup
+    chmod 0660 /sys/class/sensors/grip_sensor_wifi/enable
+    chmod 0660 /sys/class/sensors/grip_sensor_wifi/poll_delay
+    chmod 0660 /sys/class/sensors/grip_sensor_wifi/enable_wakeup
+
+    chown system system /sys/class/sensors/grip_sensor_sub/enable
+    chown system system /sys/class/sensors/grip_sensor_sub/poll_delay
+    chown system system /sys/class/sensors/grip_sensor_sub/enable_wakeup
+    chmod 0660 /sys/class/sensors/grip_sensor_sub/enable
+    chmod 0660 /sys/class/sensors/grip_sensor_sub/poll_delay
+    chmod 0660 /sys/class/sensors/grip_sensor_sub/enable_wakeup
+
+    chown system system /sys/class/sensors/grip_sensor/enable
+    chown system system /sys/class/sensors/grip_sensor/poll_delay
+    chown system system /sys/class/sensors/grip_sensor/enable_wakeup
+    chmod 0660 /sys/class/sensors/grip_sensor/enable
+    chmod 0660 /sys/class/sensors/grip_sensor/poll_delay
+    chmod 0660 /sys/class/sensors/grip_sensor/enable_wakeup
+
+    chown system system  /sys/class/input/input5/enable
+    chmod 0660 /sys/class/input/input5/enable
+    chown system system  /sys/class/input/input3/enable
+    chmod 0660 /sys/class/input/input3/enable
+    chown system system  /sys/class/input/input2/enable
+    chmod 0660 /sys/class/input/input2/enable
+    chown system system  /sys/class/input/input4/enable
+    chmod 0660 /sys/class/input/input4/enable
+
+    chown system system  /dev/input/event5
+    chmod 0660 /dev/input/event5
+    chown system system  /dev/input/event3
+    chmod 0660 /dev/input/event3
+    chown system system  /dev/input/event2
+    chmod 0660 /dev/input/event2
+    chown system system  /dev/input/event4
+    chmod 0660 /dev/input/event4
+	
+#For fingerprint
+    # add for fpsensor Fingerprint
+    chmod 660 /dev/fpsensor
+    chown system system /dev/fpsensor
+	
+    # for egis fingerprint
+    chown system system /dev/esfp0
+    chmod 0660 /dev/esfp0
+
+    #for silead fingeprint
+    mkdir /data/vendor/silead 0660 system system
+    chown system system /dev/silead_fp
+    chmod 0660 /dev/silead_fp
+
+    # for focaltech fingerprint
+    chown system system /dev/focaltech_fp
+    chmod 0660 /dev/focaltech_fp
+	
+    chown system radio /sys/class/fingerprint/fingerprint/adm
+    chmod 0444 /sys/class/fingerprint/fingerprint/adm
+
+#+bug 604664 yaoguizhen.wt, ADD, 2021/4/6,  add for dualcamera_file
+on post-fs-data
+    #restorecon_recursive /mnt/vendor/persist
+    #mkdir /data/vendor/dualcamera  0777 cameraserver cameraserver
+    copy  /vendor/etc/mecp.bin               /data/vendor/dualcamera/mecp.bin
+    copy  /vendor/etc/preview_cache    /data/vendor/dualcamera/preview_cache
+    copy  /vendor/etc/preview_model   /data/vendor/dualcamera/preview_model
+    copy  /vendor/etc/preview_policy   /data/vendor/dualcamera/preview_policy
+    copy  /vendor/etc/capture_cache   /data/vendor/dualcamera/capture_cache
+    copy  /vendor/etc/capture_model   /data/vendor/dualcamera/capture_model
+    copy  /vendor/etc/capture_policy   /data/vendor/dualcamera/capture_policy
+    chmod 0777  /data/vendor/dualcamera/mecp.bin
+    chmod 0777  /data/vendor/dualcamera/preview_cache
+    chmod 0777  /data/vendor/dualcamera/preview_model
+    chmod 0777  /data/vendor/dualcamera/preview_policy
+    chmod 0777  /data/vendor/dualcamera/capture_cache
+    chmod 0777  /data/vendor/dualcamera/capture_model
+    chmod 0777  /data/vendor/dualcamera/capture_policy
+
+#Battery
+    chmod 0666  /sys/class/sec/switch/afc_disable
+
+#-bug 604664 yaoguizhen.wt, ADD, 2021/4/6,  add for dualcamera_file
+on init
+    # Refer to http://source.android.com/devices/tech/storage/index.html
+    # It said, "Starting in Android 4.4, multiple external storage devices are surfaced to developers through
+    #           Context.getExternalFilesDirs(), Context.getExternalCacheDirs(), and Context.getObbDirs().
+    #           External storage devices surfaced through these APIs must be a semi-permanent part of the device (such as an SD card slot in a battery compartment).
+    #           Developers expect data stored in these locations to be available over long periods of time."
+    # Therefore, if the target doesn't support sd hot-plugging (Ex: the SD card slot in a battery compartment), we need to export SECONDARY_STORAGE in 'boot' section
+    #
+    # export SECONDARY_STORAGE /storage/sdcard1
+
+service fuse_usbotg /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/usbotg /storage/usbotg
+    class late_start
+    disabled
+
+#+Chk 112588,zjj.wt,add,20220314,add widevine and attest key check property
+service check_keymaster /vendor/bin/check_keymaster
+    class core
+    user system
+    group system
+    oneshot
+    disabled
+    #seclabel u:r:check_keymaster:s0
+
+service check_keybox /vendor/bin/check_keybox
+    class core
+    user system
+    group system
+    oneshot
+    disabled
+    #seclabel u:r:check_keybox:s0
+
+on property:sys.boot_completed=1
+    start check_keymaster
+    start check_keybox
+#-Chk 112588,zjj.wt,add,20220314,add widevine and attest key check property
